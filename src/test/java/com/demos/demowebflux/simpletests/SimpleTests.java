@@ -1,11 +1,16 @@
 package com.demos.demowebflux.simpletests;
 
 
+import com.sun.org.apache.xpath.internal.SourceTree;
 import org.junit.Test;
+import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 
+import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 public class SimpleTests {
@@ -32,6 +37,21 @@ public class SimpleTests {
     public void singleStreamExample4(){
         Flux<String> dogs = Flux.just("Donkey", "Filo", "Megan", "Newton");
         dogs.subscribe((s) -> System.out.println(s), (error) -> System.out.println(error), () -> System.out.println("Process finished!!!") );
+    }
+
+    @Test
+    public void singleStreamExample5(){
+        Flux<String> langs = Flux.just("Java", "C++", "Python", "Ruby", "PHP", "Scala", "Kotlin", "Javascript");
+        langs.reduce("", (a, b) -> a+b).subscribe(System.out::println);
+    }
+
+    @Test
+    public void singleStreamExample6() throws InterruptedException{
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        Flux<String> langs = Flux.just("Java", "C++", "Python", "Ruby", "PHP", "Scala", "Kotlin", "Javascript");
+        langs.delayElements(Duration.ofMillis(500)).reduce("", (a, b) -> a+b).subscribe(s -> {System.out.println(s); countDownLatch.countDown();});
+        System.out.println("FIN");
+        countDownLatch.await();
     }
 
     @Test
