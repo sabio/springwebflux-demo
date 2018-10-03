@@ -13,13 +13,15 @@ import reactor.core.publisher.Flux;
 @Setter
 @Component
 @ConfigurationProperties("guru")
-public class StackQuoteClient {
+public class StockQuoteClient {
     private String host;
     private String port;
     private String path;
 
+
+    //It gets to himself
     public Flux<Quote> getQuoteStream(){
-        String url = "http://" + host + port;
+        String url = "http://" + host + ":" + port;
 
         log.debug("url = " + url);
         return WebClient.builder()

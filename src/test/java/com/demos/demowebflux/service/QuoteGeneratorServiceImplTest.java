@@ -53,4 +53,6 @@ public class QuoteGeneratorServiceImplTest {
 
         countDownLatch.await();
     }
+
+
 }

@@ -1,7 +1,11 @@
 package com.demos.demowebflux.bootstrap;
 
+import com.demos.demowebflux.client.StockQuoteClient;
 import com.demos.demowebflux.domain.Activity;
+import com.demos.demowebflux.domain.Quote;
 import com.demos.demowebflux.repositories.ActivityRepository;
+import com.demos.demowebflux.service.QuoteService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -10,14 +14,20 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class BootstrapCLR implements CommandLineRunner {
 
     private final ActivityRepository activityRepository;
+    private final QuoteService quoteService;
 
-    public BootstrapCLR(ActivityRepository activityRepository){
+    @Autowired
+    StockQuoteClient stockQuoteClient;
+
+    public BootstrapCLR(ActivityRepository activityRepository, QuoteService quoteService){
         this.activityRepository = activityRepository;
+        this.quoteService = quoteService;
     }
 
     @Override
@@ -35,5 +45,25 @@ public class BootstrapCLR implements CommandLineRunner {
             .subscribe(null, null, () -> {
                 activityRepository.findAll().subscribe(System.out::println);
             });
+
+
+
+        System.out.println("=================ARRANCANDO========================");
+        Flux<Quote> quoteFlux = stockQuoteClient.getQuoteStream();
+        quoteFlux
+            .take(50)
+            .subscribe(quote -> {
+                    System.out.println("INICIANDO. Quote = "+quote);
+                    Mono<Quote> savedQuote = quoteService.save(quote);
+
+                    savedQuote.subscribe(s -> System.out.println("!!!!Saved quote "+s.getId()));
+                    /*
+                    System.out.println("Mono obtenido = "+savedQuote);
+                    System.out.println("!!!!Saved quote "+savedQuote.block().getId());
+                    */
+                }
+            );
+
+
     }
 }
