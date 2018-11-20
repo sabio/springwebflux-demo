@@ -22,6 +22,7 @@ public class BootstrapCLR implements CommandLineRunner {
         try {
             Flux<Quote> quoteFlux = stockQuoteClient.getQuoteStream();
             quoteFlux
+                    .take(20L)
                     .subscribe(quote -> {
                         System.out.println("Quote = " + quote);
                     });
