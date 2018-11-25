@@ -1,7 +1,6 @@
 package com.demos.demowebflux.simpletests;
 
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import org.junit.Test;
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
@@ -96,6 +95,18 @@ public class SimpleTests {
         Flux<List<String>> dogs = Flux.just(Arrays.asList("Donkey", "Filo"), Arrays.asList("Megan", "Newton"));
         dogs.flatMap(list -> Flux.fromIterable(list)).subscribe(System.out::println);
 
+    }
+
+    @Test
+    public void zip() throws InterruptedException{
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        Flux<String> people = Flux.<String>just("Alberto","Armando");
+        Flux<String> games = Flux.<String>just("Super Mario 64","Grand Theft Auto").delayElements(Duration.ofMillis(500));
+        people.zipWith(games).subscribe((tuple2) -> {
+            System.out.println("T1 = "+tuple2.getT1()+". T2 = "+tuple2.getT2());
+        }, null, () ->countDownLatch.countDown());
+
+        countDownLatch.await();
     }
 
 

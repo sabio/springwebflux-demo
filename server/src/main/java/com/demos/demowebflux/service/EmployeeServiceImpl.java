@@ -2,9 +2,11 @@ package com.demos.demowebflux.service;
 
 import com.demos.demowebflux.domain.Employee;
 import com.demos.demowebflux.repositories.EmployeeRepository;
+import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Service
 public class EmployeeServiceImpl implements EmployeeService{
 
     private final EmployeeRepository employeeRepository;

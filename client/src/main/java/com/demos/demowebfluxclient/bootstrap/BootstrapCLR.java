@@ -26,6 +26,9 @@ public class BootstrapCLR implements CommandLineRunner {
                     .subscribe(quote -> {
                         System.out.println("Quote = " + quote);
                     });
+
+
+            Flux
         }catch(Exception e){
             log.debug("=======================ERROR AL INVOCAR SERVIDOR");
         }

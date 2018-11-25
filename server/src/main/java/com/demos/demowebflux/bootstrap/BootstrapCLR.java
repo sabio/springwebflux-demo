@@ -2,8 +2,10 @@ package com.demos.demowebflux.bootstrap;
 
 import com.demos.demowebflux.client.StockQuoteClient;
 import com.demos.demowebflux.domain.Activity;
+import com.demos.demowebflux.domain.Employee;
 import com.demos.demowebflux.domain.Quote;
 import com.demos.demowebflux.repositories.ActivityRepository;
+import com.demos.demowebflux.repositories.EmployeeRepository;
 import com.demos.demowebflux.service.QuoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -20,13 +22,16 @@ import java.util.concurrent.TimeUnit;
 public class BootstrapCLR implements CommandLineRunner {
 
     private final ActivityRepository activityRepository;
+    private final EmployeeRepository employeeRepository;
+
     private final QuoteService quoteService;
 
     @Autowired
     StockQuoteClient stockQuoteClient;
 
-    public BootstrapCLR(ActivityRepository activityRepository, QuoteService quoteService){
+    public BootstrapCLR(ActivityRepository activityRepository, EmployeeRepository employeeRepository, QuoteService quoteService){
         this.activityRepository = activityRepository;
+        this.employeeRepository = employeeRepository;
         this.quoteService = quoteService;
     }
 
@@ -46,6 +51,15 @@ public class BootstrapCLR implements CommandLineRunner {
                 activityRepository.findAll().subscribe(System.out::println);
             });
 
+        employeeRepository.deleteAll()
+            .thenMany(
+               Flux.just("Shopping", "Go to the gym", "Feed the kids", "Study Java")
+                    .map(name -> new Employee(name))
+                    .flatMap(employeeRepository::save)
+            )
+            .subscribe((s)->{
+                System.out.println("BORRRADO == "+s);
+            });
 
 
         System.out.println("=================ARRANCANDO========================");
@@ -57,10 +71,10 @@ public class BootstrapCLR implements CommandLineRunner {
                     Mono<Quote> savedQuote = quoteService.save(quote);
 
                     savedQuote.subscribe(s -> System.out.println("!!!!Saved quote "+s.getId()));
-                    /*
-                    System.out.println("Mono obtenido = "+savedQuote);
-                    System.out.println("!!!!Saved quote "+savedQuote.block().getId());
-                    */
+
+                    //System.out.println("Mono obtenido = "+savedQuote);
+                    //System.out.println("!!!!Saved quote "+savedQuote.block().getId());
+
                 }
             );
 
