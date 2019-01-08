@@ -23,7 +23,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public Flux<ActivityEvent> events(String activityId) {
         return Flux.<ActivityEvent>generate(activityEventSynchronousSink -> {
-            activityEventSynchronousSink.next(new ActivityEvent("Titulo del evento", LocalDateTime.now()));
+            activityEventSynchronousSink.next(new ActivityEvent("Titulo del evento "+activityId, LocalDateTime.now()));
         }).delayElements(Duration.ofSeconds(1));
     }
 
@@ -36,4 +36,5 @@ public class ActivityServiceImpl implements ActivityService {
     public Flux<Activity> getAllActivities() {
         return this.activityRepository.findAll();
     }
+
 }

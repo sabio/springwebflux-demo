@@ -8,4 +8,5 @@ public interface EmployeeService {
 
     Flux<Employee> getAllEmployees();
     Mono<Employee> findById(String id);
+    Mono<Employee> save(Employee employee);
 }

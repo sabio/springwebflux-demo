@@ -2,8 +2,10 @@ package com.demos.demowebflux.bootstrap;
 
 import com.demos.demowebflux.client.StockQuoteClient;
 import com.demos.demowebflux.domain.Activity;
+import com.demos.demowebflux.domain.Employee;
 import com.demos.demowebflux.domain.Quote;
 import com.demos.demowebflux.repositories.ActivityRepository;
+import com.demos.demowebflux.service.EmployeeService;
 import com.demos.demowebflux.service.QuoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -21,13 +23,15 @@ public class BootstrapCLR implements CommandLineRunner {
 
     private final ActivityRepository activityRepository;
     private final QuoteService quoteService;
+    private final EmployeeService employeeService;
 
     @Autowired
     StockQuoteClient stockQuoteClient;
 
-    public BootstrapCLR(ActivityRepository activityRepository, QuoteService quoteService){
+    public BootstrapCLR(ActivityRepository activityRepository, QuoteService quoteService, EmployeeService employeeService){
         this.activityRepository = activityRepository;
         this.quoteService = quoteService;
+        this.employeeService = employeeService;
     }
 
     @Override
@@ -64,6 +68,8 @@ public class BootstrapCLR implements CommandLineRunner {
                 }
             );
 
+        Employee emp = new Employee("1","Pepe");
 
+        employeeService.save(emp).subscribe();
     }
 }
