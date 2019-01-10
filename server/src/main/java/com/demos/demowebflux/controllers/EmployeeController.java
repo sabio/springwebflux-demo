@@ -26,5 +26,4 @@ public class EmployeeController {
     public Mono<Employee> save(@RequestBody Employee employee){
         return this.employeeService.save(employee);
     }
-
 }

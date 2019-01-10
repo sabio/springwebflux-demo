@@ -3,7 +3,6 @@ package com.demos.demowebflux.service;
 import com.demos.demowebflux.domain.Activity;
 import com.demos.demowebflux.domain.ActivityEvent;
 import com.demos.demowebflux.repositories.ActivityRepository;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -23,6 +22,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public Flux<ActivityEvent> events(String activityId) {
         return Flux.<ActivityEvent>generate(activityEventSynchronousSink -> {
+            System.out.println("FECHA = "+LocalDateTime.now());
             activityEventSynchronousSink.next(new ActivityEvent("Titulo del evento "+activityId, LocalDateTime.now()));
         }).delayElements(Duration.ofSeconds(1));
     }

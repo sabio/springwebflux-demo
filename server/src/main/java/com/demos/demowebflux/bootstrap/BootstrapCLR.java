@@ -51,7 +51,6 @@ public class BootstrapCLR implements CommandLineRunner {
             });
 
 
-
         System.out.println("=================ARRANCANDO========================");
         Flux<Quote> quoteFlux = stockQuoteClient.getQuoteStream();
         quoteFlux
@@ -61,10 +60,10 @@ public class BootstrapCLR implements CommandLineRunner {
                     Mono<Quote> savedQuote = quoteService.save(quote);
 
                     savedQuote.subscribe(s -> System.out.println("!!!!Saved quote "+s.getId()));
-                    /*
-                    System.out.println("Mono obtenido = "+savedQuote);
-                    System.out.println("!!!!Saved quote "+savedQuote.block().getId());
-                    */
+
+                    //System.out.println("Mono obtenido = "+savedQuote);
+                    //System.out.println("!!!!Saved quote "+savedQuote.block().getId());
+
                 }
             );
 
